@@ -1,1 +1,1 @@
-# EcommerceAPI
+EcommerceAPI is a Rust-based server project designed to serve as the backend for ecommerce platforms. This API handles database interactions, sets up routes for handling various ecommerce operations, and listens on a specified port for incoming requests. It prioritizes efficient data handling and robust error management to ensure seamless operation.
