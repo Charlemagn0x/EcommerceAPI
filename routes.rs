@@ -8,71 +8,71 @@ mod controllers {
     pub mod order_controller;
 }
 
-async fn create_product() -> impl Responder {
-    match controllers::product_controller::create_product().await {
+async fn create_product_handler() -> impl Responder {
+    match controllers::product_controller::create().await {
         Ok(_) => HttpResponse::Ok().body("Product created successfully"),
         Err(e) => HttpResponse::InternalServerError().body(e.to_string()),
     }
 }
 
-async fn get_product() -> impl Responder {
-    match controllers::product_controller::get_product().await {
+async fn get_product_handler() -> impl Responder {
+    match controllers::product_controller::fetch().await {
         Ok(product) => HttpResponse::Ok().json(product),
         Err(e) => HttpResponse::NotFound().body(e.to_string()),
     }
 }
 
-async fn update_product() -> impl Responder {
-    match controllers::product_controller::update_product().await {
+async fn update_product_handler() -> impl Responder {
+    match controllers::product_controller::update().await {
         Ok(_) => HttpResponse::Ok().body("Product updated successfully"),
         Err(e) => HttpResponse::InternalServerError().body(e.to_string()),
     }
 }
 
-async fn delete_product() -> impl Responder {
-    match controllers::product_controller::delete_product().await {
+async fn delete_product_handler() -> impl Responder {
+    match controllers::product_controller::delete().await {
         Ok(_) => HttpResponse::Ok().body("Product deleted successfully"),
         Err(e) => HttpResponse::InternalServerError().body(e.to_string()),
     }
 }
 
-async fn register_user() -> impl Responder {
-    match controllers::user_controller::register_user().await {
+async fn register_user_handler() -> impl Responder {
+    match controllers::user_controller::register().await {
         Ok(_) => HttpResponse::Ok().body("User registered successfully"),
         Err(e) => HttpResponse::InternalServerError().body(e.to_string()),
     }
 }
 
-async fn login_user() -> impl Responder {
-    match controllers::user_controller::login_user().await {
+async fn login_user_handler() -> impl Responder {
+    match controllers::user_controller::login().await {
         Ok(token) => HttpResponse::Ok().json(token),
         Err(e) => HttpResponse::Unauthorized().body(e.to_string()),
     }
 }
 
-async fn update_profile() -> impl Responder {
+async fn update_user_profile_handler() -> impl Responder {
     match controllers::user_controller::update_profile().await {
         Ok(_) => HttpResponse::Ok().body("Profile updated successfully"),
         Err(e) => HttpResponse::InternalServerError().body(e.to_string()),
     }
 }
 
-async fn create_order() -> impl Responder {
-    match controllers::order_controller::create_order().await {
+async fn create_order_handler() -> impl Responder {
+    match controllers::order_controller::create().await {
         Ok(_) => HttpResponse::Ok().body("Order created successfully"),
         Err(e) => HttpResponse::InternalServerError().body(e.to_string()),
     }
 }
 
-async fn view_order() -> impl Responder {
-    match controllers::order_controller::view_order().await {
+async fn view_order_handler() -> impl Responder {
+    match controllers::order_controller::fetch().await {
         Ok(order) => HttpResponse::Ok().json(order),
         Err(e) => HttpResponse::NotFound().body(e.to_string()),
     }
 }
 
-async fn update_order_status() -> impl Responder {
-    match controllers::order_controller::update_order_status().await {
+async fn update_order_status_handler() -> impl Responder {
+    match controllers::order_controller::update_status().await {
         Ok(_) => HttpResponse::Ok().body("Order status updated successfully"),
         Err(e) => HttpResponse::InternalServerError().body(e.to_string()),
     }
@@ -87,16 +87,16 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
-            .route("/products", web::post().to(create_product))
-            .route("/products/{id}", web::get().to(get_product))
-            .route("/products/{id}", web::put().to(update_product))
-            .route("/products/{id}", web::delete().to(delete_product))
-            .route("/users/register", web::post().to(register_user))
-            .route("/users/login", web::post().to(login_user))
-            .route("/users/update", web::put().to(update_profile))
-            .route("/orders", web::post().to(create_order))
-            .route("/orders/{id}", web::get().to(view_order))
-            .route("/orders/{id}/status", web::put().to(update_order_status))
+            .route("/products", web::post().to(create_product_handler))
+            .route("/products/{id}", web::get().to(get_product_handler))
+            .route("/products/{id}", web::put().to(update_product_handler))
+            .route("/products/{id}", web::delete().to(delete_product_handler))
+            .route("/users/register", web::post().to(register_user_handler))
+            .route("/users/login", web::post().to(login_user_handler))
+            .route("/users/update", web::put().to(update_user_profile_handler))
+            .route("/orders", web::post().to(create_order_handler))
+            .route("/orders/{id}", web::get().to(view_order_handler))
+            .route("/orders/{id}/status", web::put().to(update_order_status_handler))
     })
     .bind(server_address)?
     .run()
