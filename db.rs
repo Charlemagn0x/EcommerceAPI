@@ -1,17 +1,15 @@
 use std::env;
-use rusqlite::{Connection, Result};
-use postgres::{Client, NoTls};
+use rusqlite::{Connection, Result as SqliteResult};
+use postgres::{Client, NoTls, Error as PostgresError};
 
-fn connect_to_postgresql() -> Result<Client, postgres::Error> {
+fn connect_to_postgresql() -> Result<Client, PostgresError> {
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let client = Client::connect(&database_url, NoTls)?;
-    Ok(client)
+    Client::connect(&database_url, NoTls).map_err(|e| e)
 }
 
-fn connect_to_sqlite() -> Result<Connection, rusqlite::Error> {
+fn connect_to_sqlite() -> SqliteResult<Connection> {
     let database_path = env::var("DATABASE_PATH").expect("DATABASE_PATH must be set");
-    let conn = Connection::open(database_path)?;
-    Ok(conn)
+    Connection::open(database_path).map_err(|e| e)
 }
 
 fn main() {
